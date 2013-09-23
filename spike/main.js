@@ -36,53 +36,115 @@ var proto = Gauge.prototype;
 function Gauge (el, opts) {
   if (!(this instanceof Gauge)) return new Gauge(el, opts);
 
-  this.el = el;
+  this._el = el;
 
-  this.opts = xtend(defaultOpts, opts);  
+  this._opts = xtend(defaultOpts, opts);  
 
-  this.size   =  this.opts.size;
-  this.radius =  this.size * 0.9 / 2;
-  this.cx     =  this.size / 2;
-  this.cy     =  this.cx;
-  this.min    =  this.opts.min;
-  this.max    =  this.opts.max;
-  this.range  =  this.max - this.min;
-  this.outer  =  this.opts.outer;
+  this._size   =  this._opts.size;
+  this._radius =  this._size * 0.9 / 2;
+  this._cx     =  this._size / 2;
+  this._cy     =  this._cx;
+  this._min    =  this._opts.min;
+  this._max    =  this._opts.max;
+  this._range  =  this._max - this._min;
+  this._outer  =  this._opts.outer;
+  this._inner  =  this._opts.inner;
 
   // TODO: just pass percent i.e. 0.7 - 1.0
-  this.greenZone = this.opts.greenZone || {
-      from  :  this.min + this.range * 0.75
-    , to    :  this.min + this.range * 0.9
+  this._greenZone = this._opts.greenZone || {
+      from  :  this._min + this._range * 0.75
+    , to    :  this._min + this._range * 0.9
     , color :  '##109618'
   }
 
 
-  this.init();
-  this.outerCircle();
-  // continue with prototype
-
-
+  this._initGauge();
+  this._drawOuterCircle();
+  this._drawInnerCircle();
+  this._drawLabel();
+  this._drawZones();
 }
 
-proto.init = function () {
-  this.gauge = d3.select(this.el)
+proto._initGauge = function () {
+  this._gauge = d3.select(this._el)
     .append('svg:svg')
     .attr('class', 'd3-gauge')
-    .attr('width', this.size)
-    .attr('height', this.size)
+    .attr('width', this._size)
+    .attr('height', this._size)
 }
 
-proto.outerCircle = function () {
-  this.gauge
+proto._drawOuterCircle = function () {
+  this._gauge
     .append('svg:circle')
-    .attr('cx'            ,  this.cx)
-    .attr('cy'            ,  this.cy)
-    .attr('r'             ,  this.radius)
-    .style('fill'         ,  this.outer.fill)
-    .style('stroke'       ,  this.outer.stroke)
-    .style('stroke-width' ,  this.outer.strokeWidth)
+    .attr('cx'            ,  this._cx)
+    .attr('cy'            ,  this._cy)
+    .attr('r'             ,  this._radius)
+    .style('fill'         ,  this._outer.fill)
+    .style('stroke'       ,  this._outer.stroke)
+    .style('stroke-width' ,  this._outer.strokeWidth)
 }
 
+proto._drawInnerCircle = function () {
+  this._gauge
+    .append('svg:circle')
+    .attr('cx'            ,  this._cx)
+    .attr('cy'            ,  this._cy)
+    .attr('r'             ,  0.9 * this._radius)
+    .style('fill'         ,  this._inner.fill)
+    .style('stroke'       ,  this._inner.stroke)
+    .style('stroke-width' ,  this._inner.strokeWidth)
+}
+
+proto._drawLabel = function () {
+  var labelOpts = this._opts.label;
+  if (typeof labelOpts === undefined) return;
+
+  var fontSize = labelOpts.fontSize || Math.round(this._size / 9);
+  var halfFontSize = fontSize / 2;
+
+  this._gauge
+    .append('svg:text')
+    .attr('x', this._cx)
+    .attr('y', this._cy / 2 + halfFontSize)
+    .attr('dy', halfFontSize)
+    .attr('text-anchor', 'middle')
+    .text(labelOpts.text)
+    .style('font-size', fontSize + 'px')
+    .style('fill', labelOpts.fill)
+}
+
+proto._drawZones = function () {
+  if (this._greenZone) this._drawBand(this._greenZone.from, this._greenZone.to, this._greenZone.color);
+}
+
+proto._drawBand = function (start, end, color) {
+
+  function transform () {
+    return 'translate(' + this._cx + ', ' + this._cy +') rotate(270)';
+  }
+
+  var arc = d3.svg.arc()
+    .startAngle(this._toRadians(start))
+    .endAngle(this._toRadians(end))
+    .innerRadius(0.65 * this._radius)
+    .outerRadius(0.85 * this._radius)
+    ;
+
+  this._gauge
+    .append('svg:path')
+    .style('fill', color)
+    .attr('d', arc)
+    .attr('transform', transform)
+}
+
+proto._toDegrees =  function (value) {
+  var threeFourthCircle = this._range * 270;
+  return value / threeFourthCircle - (this._min / threeFourthCircle + 45);
+}
+
+proto._toRadians = function (value) {
+  return this._toDegrees(value) * Math.PI / 180;
+}
 
 // Test
 
