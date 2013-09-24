@@ -11,23 +11,24 @@ var go = module.exports = {
       , stroke      :  '#000'
       , width :  '0.5px'
     }
-  , inner  :  {
-        fill        :  '#fff'
-      , stroke      :  '#E0E0E0'
-      , width :  '2px'
+  , inner :  {
+        fill   :  '#fff'
+      , stroke :  '#E0E0E0'
+      , width  :  '2px'
     }
   , label : {
         text: 'Memory'
       , fill: '#333'
     }
   , minorTicks : { 
-        count: 2
+        count: 4
       , stroke: '#666'
       , width: '1px'
     }
   , majorTicks : { 
         count: 5
       , stroke: '#333'
+      , textColor: 'darkblue'
       , width: '2px'
     }
   , needle : {
@@ -45,7 +46,7 @@ var go = module.exports = {
     }
   , greenZone : undefined
   , yellowZone : {
-        from  :  0.75
+        from  :  0.73
       , to    :  0.9
       , color :  '#FF9900'
     }

@@ -68,8 +68,8 @@ proto._render = function () {
   this._drawInnerCircle();
   this._drawLabel();
 
-  this._drawTicks();
   this._drawZones();
+  this._drawTicks();
 
   this._drawNeedle();
   this.redraw(this._min, 0);
@@ -147,7 +147,7 @@ proto._drawTicks = function () {
         .attr('text-anchor', major === this._min ? 'start' : 'end')
         .text(major)
         .style('font-size', this._tickFontSize)
-        .style('fill', this._majorTicks.stroke)
+        .style('fill', this._majorTicks.textColor)
         .style('stroke-width', '0px')
     }
   }
@@ -161,8 +161,8 @@ proto._drawLine = function (p1, p2, color, width) {
     .attr('y1'            ,  p1.y)
     .attr('x2'            ,  p2.x)
     .attr('y2'            ,  p2.y)
-    .style('stroke'       ,  this._minorTicks.color)
-    .style('stroke-width' ,  this._minorTicks.width)
+    .style('stroke'       ,  color)
+    .style('stroke-width' ,  width)
 }
 
 proto._drawZones = function () {
@@ -225,9 +225,9 @@ proto._drawNeedle = function () {
     .attr('cx'            ,  this._cx)
     .attr('cy'            ,  this._cy)
     .attr('r'             ,  this._radius * this._needleContainer.radiusRatio / 10)
-    .style('fill'         ,  this._needleContainer.fill)
-    .style('stroke'       ,  this._needleContainer.stroke)
-    .style('fill-opacity' ,  this._needleContainer.opacity)
+      .style('fill'         ,  this._needleContainer.fill)
+      .style('stroke'       ,  this._needleContainer.stroke)
+      .style('fill-opacity' ,  this._needleContainer.opacity)
 
   var fontSize = Math.round(this._size / 10);
   needleContainer
