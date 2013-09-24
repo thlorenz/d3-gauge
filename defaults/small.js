@@ -1,9 +1,9 @@
 'use strict';
 
 var go = module.exports = {
-    size :  250
+    size :  100
   , min  :  0
-  , max  :  100 
+  , max  :  50 
   , transitionDuration : 500
 
   , outer  :  {
@@ -17,7 +17,7 @@ var go = module.exports = {
       , width  :  '2px'
     }
   , label : {
-        text: 'Memory'
+        text: 'label.text'
       , fill: '#333'
     }
   , minorTicks : { 
@@ -29,20 +29,20 @@ var go = module.exports = {
         count: 5
       , stroke: '#333'
       , textColor: 'darkblue'
-      , width: '2px'
+      , width: '1.5px'
     }
   , needle : {
-       widthRatio : 0.6 
+        widthRatio : 0.6 
       , fill        :  '#dc3912'
       , stroke      :  '#c63310'
-      , opacity     :  0.7
+      , opacity     :  0.3
 
     }
   , needleContainer : {
         radiusRatio :  0.7
-      , fill        :  '#4684EE'
+      , fill        :  '#333'
       , stroke      :  '#666'
-      , opacity     :  1 
+      , opacity     :  0.4 
     }
   , greenZone : undefined
   , yellowZone : {

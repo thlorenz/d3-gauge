@@ -2,7 +2,7 @@
   "name": "d3-gauge",
   "version": "0.0.0",
   "description": "Gauge visualization built on top of d3.",
-  "main": "index.js",
+  "main": "d3-gauge",
   "scripts": {
     "test-main": "tap test/*.js",
     "test-0.8": "nave use 0.8 npm run test-main",
@@ -17,7 +17,8 @@
   "homepage": "https://github.com/thlorenz/d3-gauge",
   "dependencies": {
     "d3": "~3.3.5",
-    "xtend": "~2.1.1"
+    "xtend": "~2.1.1",
+    "deep-extend": "~0.2.6"
   },
   "devDependencies": {
     "nave": "~0.4.3",
