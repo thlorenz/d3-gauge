@@ -3,50 +3,8 @@
 // heavily inspired by: http://bl.ocks.org/tomerd/1499279
 
 var xtend = require('xtend');
+var defaultOpts = require('./default-opts');
 var d3 = require('d3');
-
-var defaultOpts = {
-    size :  250
-  , min  :  0
-  , max  :  100 
-  , transitionDuration : 500
-
-  , outer  :  {
-        fill        :  '#ccc'
-      , stroke      :  '#000'
-      , width :  '0.5px'
-    }
-  , inner  :  {
-        fill        :  '#fff'
-      , stroke      :  '#E0E0E0'
-      , width :  '2px'
-    }
-  , label : {
-        text: 'Memory'
-      , fill: '#333'
-    }
-  , minorTicks : { 
-        count: 2
-      , color: '#666'
-      , width: '1px'
-    }
-  , majorTicks : { 
-        count: 5
-      , color: '#333'
-      , width: '2px'
-    }
-  , greenZone : undefined
-  , yellowZone : {
-        from  :  0.75
-      , to    :  0.9
-      , color :  '#FF9900'
-    }
-  , redZone : {
-        from  :  0.9
-      , to    :  1.0 
-      , color :  '#DC3912'
-    }
-}
 
 var go = module.exports = Gauge;
 var proto = Gauge.prototype;
@@ -74,6 +32,9 @@ function Gauge (el, opts) {
   this._majorTicks = this._opts.majorTicks;
   this._minorTicks = this._opts.minorTicks;
   this._tickFontSize = this._opts.tickFontSize || Math.round(this._size / 16)
+
+  this._needle = this._opts.needle;
+  this._needleContainer = this._opts.needleContainer;
   
   this._transitionDuration = this._opts.transitionDuration;
   this._zones = [ '_greenZone', '_yellowZone', '_redZone' ];
@@ -171,10 +132,10 @@ proto._drawTicks = function () {
   for (var major = this._min; major <= this._max; major += majorDelta) {
     var minorMax = Math.min(major + majorDelta, this._max);
     for (var minor = major + minorDelta; minor < minorMax; minor += minorDelta) {
-      this._drawLine(this._toPoint(minor, 0.75), this._toPoint(minor, 0.85), this._minorTicks.color, this._minorTicks.width);
+      this._drawLine(this._toPoint(minor, 0.75), this._toPoint(minor, 0.85), this._minorTicks.stroke, this._minorTicks.width);
     }
 
-    this._drawLine(this._toPoint(major, 0.7), this._toPoint(major, 0.85), this._majorTicks.color, this._majorTicks.width);
+    this._drawLine(this._toPoint(major, 0.7), this._toPoint(major, 0.85), this._majorTicks.stroke, this._majorTicks.width);
 
     if (major === this._min || major === this._max) {
       point = this._toPoint(major, 0.63);
@@ -186,9 +147,8 @@ proto._drawTicks = function () {
         .attr('text-anchor', major === this._min ? 'start' : 'end')
         .text(major)
         .style('font-size', this._tickFontSize)
-        .style('fill', this._majorTicks.color)
+        .style('fill', this._majorTicks.stroke)
         .style('stroke-width', '0px')
-        
     }
   }
 
@@ -255,19 +215,19 @@ proto._drawNeedle = function () {
     .data([ needlePath ])
     .enter()
       .append('svg:path')
-        .attr('d', needleLine)
-        .style('fill', '#dc3912')
-        .style('stroke', '#c63310')
-        .style('fill-opacity', 0.7)
+        .attr('d'             ,  needleLine)
+        .style('fill'         ,  this._needle.fill)
+        .style('stroke'       ,  this._needle.stroke)
+        .style('fill-opacity' ,  this._needle.opacity)
         
   needleContainer
     .append('svg:circle')
-    .attr('cx'       ,  this._cx)
-    .attr('cy'       ,  this._cy)
-    .attr('r'        ,  0.12 * this._radius)
-    .style('fill'    ,  '#4684EE')
-    .style('stroke'  ,  '#666')
-    .style('opacity' ,  1);
+    .attr('cx'            ,  this._cx)
+    .attr('cy'            ,  this._cy)
+    .attr('r'             ,  this._radius * this._needleContainer.radiusRatio / 10)
+    .style('fill'         ,  this._needleContainer.fill)
+    .style('stroke'       ,  this._needleContainer.stroke)
+    .style('fill-opacity' ,  this._needleContainer.opacity)
 
   var fontSize = Math.round(this._size / 10);
   needleContainer
@@ -275,13 +235,13 @@ proto._drawNeedle = function () {
     .data([ midValue ])
     .enter()
       .append('svg:text')
-        .attr('x', this._cx)
-        .attr('y', this._size - this._cy / 4 - fontSize)
-        .attr('dy', fontSize / 2)
-        .attr('text-anchor', 'middle')
-        .style('font-size', fontSize + 'px')
-        .style('fill', '#000')
-        .style('stroke-width', '0px');
+        .attr('x'             ,  this._cx)
+        .attr('y'             ,  this._size - this._cy / 4 - fontSize)
+        .attr('dy'            ,  fontSize / 2)
+        .attr('text-anchor'   ,  'middle')
+        .style('font-size'    ,  fontSize + 'px')
+        .style('fill'         ,  '#000')
+        .style('stroke-width' ,  '0px');
 }
 
 proto._buildNeedlePath = function (value) {
@@ -294,7 +254,7 @@ proto._buildNeedlePath = function (value) {
     return point;
   }
 
-  var delta = this._range / 13
+  var delta = this._range * this._needle.widthRatio / 10
     , tailValue = value - (this._range * (1/ (270/360)) / 2)
 
   var head = valueToPoint(value, 0.85)
@@ -341,7 +301,7 @@ proto.redraw = function(value, transitionDuration) {
 }
 
 proto._toDegrees = function (value) {
-  // Note: tried to factor out 'this._range * 270' but that breaks things, most likely to rounding behavior
+  // Note: tried to factor out 'this._range * 270' but that breaks things, most likely due to rounding behavior
   return value / this._range * 270 - (this._min / this._range * 270 + 45);
 }
 
