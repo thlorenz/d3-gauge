@@ -83,11 +83,8 @@ proto._render = function () {
   this._drawInnerCircle();
   this._drawLabel();
 
-  // TODO: not working yet
-  // this._drawTicks();
-
-  // TODO: not yet working
-  //this._drawZones();
+  this._drawTicks();
+  this._drawZones();
 
   this._drawNeedle();
   this.redraw(this._min, 0);
@@ -314,10 +311,9 @@ proto.redraw = function(value, transitionDuration) {
     .attrTween('transform', transition);
 }
 
-proto._toDegrees =  function (value) {
-  var threeFourthCircle = this._range * 270;
-  var deg = value / threeFourthCircle - (this._min / threeFourthCircle + 45);
-  return deg;
+proto._toDegrees = function (value) {
+  // Note: tried to factor out 'this._range * 270' but that breaks things, most likely to rounding behavior
+  return value / this._range * 270 - (this._min / this._range * 270 + 45);
 }
 
 proto._toRadians = function (value) {
@@ -325,17 +321,15 @@ proto._toRadians = function (value) {
 }
 
 proto._toPoint = function (value, factor) {
-  var radians = this._toRadians(value)
-    , factoredRadius = this._radius * factor;
-
-  return { 
-      x: this._cx - (factoredRadius * Math.cos(radians))
-    , y: this._cy - (factoredRadius * Math.sin(radians))
-  }
+  var len = this._radius * factor;
+  var inRadians = this._toRadians(value);
+  return {
+    x: this._cx - len * Math.cos(inRadians),
+    y: this._cy - len * Math.sin(inRadians)
+  };
 }
 
 // Test
-
 var el = document.createElement('div');
 document.body.appendChild(el);
 go(el);
