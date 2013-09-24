@@ -151,7 +151,6 @@ proto._drawTicks = function () {
         .style('stroke-width', '0px')
     }
   }
-
 }
 
 proto._drawLine = function (p1, p2, color, width) {
@@ -272,13 +271,16 @@ proto.redraw = function(value, transitionDuration) {
   var self = this;
 
   function transition () {
-    var needleValue = value;
-    // TODO: refactor this ugliness i.e. to ternary
-    if (value > self._max) needleValue = self._max + 0.02 * self._range;
-    else if (value < self._min) needleValue = self._min - 0.02 * self._range;
+    var needleValue = value
+      , overflow = value > self._max
+      , underflow = value < self._min;
+
+         if (overflow)  needleValue = self._max + 0.02 * self._range;
+    else if (underflow) needleValue = self._min - 0.02 * self._range;
 
     var targetRotation = self._toDegrees(needleValue) - 90
       , currentRotation = self._currentRotation || targetRotation;
+
     self._currentRotation = targetRotation;
     
     return function (step) {
