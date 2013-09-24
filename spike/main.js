@@ -16,7 +16,6 @@ var defaultOpts = {
       , stroke      :  '#000'
       , strokeWidth :  '0.5px'
     }
-
   , inner  :  {
         fill        :  '#fff'
       , stroke      :  '#E0E0E0'
@@ -35,6 +34,17 @@ var defaultOpts = {
         count: 5
       , color: '#333'
       , width: '2px'
+    }
+  , greenZone : undefined
+  , yellowZone : {
+        from  :  0.75
+      , to    :  0.9
+      , color :  '#FF9900'
+    }
+  , redZone : {
+        from  :  0.9
+      , to    :  1.0 
+      , color :  '#DC3912'
     }
 }
 
@@ -63,18 +73,32 @@ function Gauge (el, opts) {
 
   this._majorTicks = this._opts.majorTicks;
   this._minorTicks = this._opts.minorTicks;
-  this._tickFontSize = Math.round(this._size / 16)
+  this._tickFontSize = this._opts.tickFontSize || Math.round(this._size / 16)
   
   this._transitionDuration = this._opts.transitionDuration;
+  this._zones = [ '_greenZone', '_yellowZone', '_redZone' ];
 
-  // TODO: just pass percent i.e. 0.7 - 1.0
-  this._greenZone = this._opts.greenZone || {
-      from  :  this._min + this._range * 0.75
-    , to    :  this._min + this._range * 0.9
-    , color :  '#109618'
+  this._initZones();
+  this._render();
+}
+
+proto._initZones = function () {
+  var self = this;
+
+  function percentToVal (percent) {
+    return self._min + self._range * percent;
   }
 
-  this._render();
+  function initZone (zone) {
+    self[zone] = self._opts[zone.slice(1)];
+
+    if (self[zone]) { 
+      self[zone].from = percentToVal(self[zone].from);
+      self[zone].to = percentToVal(self[zone].to);  
+    }
+  }
+
+  this._zones.forEach(initZone);
 }
 
 proto._render = function () {
@@ -182,7 +206,12 @@ proto._drawLine = function (p1, p2, color, width) {
 }
 
 proto._drawZones = function () {
-  if (this._greenZone) this._drawBand(this._greenZone.from, this._greenZone.to, this._greenZone.color);
+  var self = this;
+  function drawZone (zone) {
+    if (self[zone]) self._drawBand(self[zone].from, self[zone].to, self[zone].color);
+  }
+
+  this._zones.forEach(drawZone);
 }
 
 proto._drawBand = function (start, end, color) {
