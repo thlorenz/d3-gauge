@@ -14,12 +14,12 @@ var defaultOpts = {
   , outer  :  {
         fill        :  '#ccc'
       , stroke      :  '#000'
-      , strokeWidth :  '0.5px'
+      , width :  '0.5px'
     }
   , inner  :  {
         fill        :  '#fff'
       , stroke      :  '#E0E0E0'
-      , strokeWidth :  '2px'
+      , width :  '2px'
     }
   , label : {
         text: 'Memory'
@@ -130,7 +130,7 @@ proto._drawOuterCircle = function () {
     .attr('r'             ,  this._radius)
     .style('fill'         ,  this._outer.fill)
     .style('stroke'       ,  this._outer.stroke)
-    .style('stroke-width' ,  this._outer.strokeWidth)
+    .style('stroke-width' ,  this._outer.width)
 }
 
 proto._drawInnerCircle = function () {
@@ -141,7 +141,7 @@ proto._drawInnerCircle = function () {
     .attr('r'             ,  0.9 * this._radius)
     .style('fill'         ,  this._inner.fill)
     .style('stroke'       ,  this._inner.stroke)
-    .style('stroke-width' ,  this._inner.strokeWidth)
+    .style('stroke-width' ,  this._inner.width)
 }
 
 proto._drawLabel = function () {
