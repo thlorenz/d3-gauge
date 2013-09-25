@@ -28,6 +28,6 @@ function updateGauges() {
 
 // TODO: fix deep extend - currently messes with original
 createGauge({ clazz: 'simple', label: { text: 'Main Mem' } });
-//createGauge(deepXtend(small, { label: { text: 'Proc Mem' } }));
+createGauge(deepXtend(small, { clazz: 'small', label: { text: 'Proc Mem' } }));
 
 setInterval(updateGauges, 500);
