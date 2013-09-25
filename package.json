@@ -4,11 +4,7 @@
   "description": "Gauge visualization built on top of d3.",
   "main": "d3-gauge",
   "scripts": {
-    "test-main": "tap test/*.js",
-    "test-0.8": "nave use 0.8 npm run test-main",
-    "test-0.10": "nave use 0.10 npm run test-main",
-    "test-all": "npm run test-main && npm run test-0.8 && npm run test-0.10",
-    "test": "if [ -e $TRAVIS ]; then npm run test-all; else npm run test-main; fi"
+    "demo": "echo 'Open: http://0.0.0.0:3000' && beefy example/main.js 3000"
   },
   "repository": {
     "type": "git",
@@ -23,7 +19,8 @@
   "devDependencies": {
     "nave": "~0.4.3",
     "tape": "~1.0.4",
-    "tap": "~0.4.3"
+    "tap": "~0.4.3",
+    "beefy": "~0.4.3"
   },
   "keywords": [],
   "author": {
