@@ -38,7 +38,13 @@ function Gauge (el, opts) {
   
   this._transitionDuration = this._opts.transitionDuration;
   this._zones = [ '_greenZone', '_yellowZone', '_redZone' ];
+  this._zoneSelectors = {
+      greenZone  :  'green-zone'
+    , yellowZone :  'yellow-zone'
+    , redZone    :  'red-zone'
+  }
 
+  this._clazz = opts.clazz;
   this._initZones();
   this._render();
 }
@@ -56,6 +62,7 @@ proto._initZones = function () {
     if (self[zone]) { 
       self[zone].from = percentToVal(self[zone].from);
       self[zone].to = percentToVal(self[zone].to);  
+      self[zone].clazz = self._zoneSelectors[zone.slice(1)];
     }
   }
 
@@ -78,31 +85,27 @@ proto._render = function () {
 proto._initGauge = function () {
   this._gauge = d3.select(this._el)
     .append('svg:svg')
-    .attr('class', 'd3-gauge')
-    .attr('width', this._size)
-    .attr('height', this._size)
+    .attr('class'  ,  'd3-gauge' + (this._clazz ? ' ' + this._clazz : ''))
+    .attr('width'  ,  this._size)
+    .attr('height' ,  this._size)
 }
 
 proto._drawOuterCircle = function () {
   this._gauge
     .append('svg:circle')
-    .attr('cx'            ,  this._cx)
-    .attr('cy'            ,  this._cy)
-    .attr('r'             ,  this._radius)
-    .style('fill'         ,  this._outer.fill)
-    .style('stroke'       ,  this._outer.stroke)
-    .style('stroke-width' ,  this._outer.width)
+    .attr('class' ,  'outer-circle')
+    .attr('cx'    ,  this._cx)
+    .attr('cy'    ,  this._cy)
+    .attr('r'     ,  this._radius)
 }
 
 proto._drawInnerCircle = function () {
   this._gauge
     .append('svg:circle')
-    .attr('cx'            ,  this._cx)
-    .attr('cy'            ,  this._cy)
-    .attr('r'             ,  0.9 * this._radius)
-    .style('fill'         ,  this._inner.fill)
-    .style('stroke'       ,  this._inner.stroke)
-    .style('stroke-width' ,  this._inner.width)
+    .attr('class' ,  'inner-circle')
+    .attr('cx'    ,  this._cx)
+    .attr('cy'    ,  this._cy)
+    .attr('r'     ,  0.9 * this._radius)
 }
 
 proto._drawLabel = function () {
@@ -114,13 +117,12 @@ proto._drawLabel = function () {
 
   this._gauge
     .append('svg:text')
+    .attr('class', 'label')
     .attr('x', this._cx)
     .attr('y', this._cy / 2 + halfFontSize)
     .attr('dy', halfFontSize)
     .attr('text-anchor', 'middle')
     .text(labelOpts.text)
-    .style('font-size', fontSize + 'px')
-    .style('fill', labelOpts.fill)
 }
 
 proto._drawTicks = function () {
@@ -132,48 +134,44 @@ proto._drawTicks = function () {
   for (var major = this._min; major <= this._max; major += majorDelta) {
     var minorMax = Math.min(major + majorDelta, this._max);
     for (var minor = major + minorDelta; minor < minorMax; minor += minorDelta) {
-      this._drawLine(this._toPoint(minor, 0.75), this._toPoint(minor, 0.85), this._minorTicks.stroke, this._minorTicks.width);
+      this._drawLine(this._toPoint(minor, 0.75), this._toPoint(minor, 0.85), 'minor-tick');
     }
 
-    this._drawLine(this._toPoint(major, 0.7), this._toPoint(major, 0.85), this._majorTicks.stroke, this._majorTicks.width);
+    this._drawLine(this._toPoint(major, 0.7), this._toPoint(major, 0.85), 'major-tick');
 
     if (major === this._min || major === this._max) {
       point = this._toPoint(major, 0.63);
       this._gauge
         .append('svg:text')
+        .attr('class', 'major-tick-label')
         .attr('x', point.x)
         .attr('y', point.y)
-        .attr('dy', this._tickFontSize / 3)
         .attr('text-anchor', major === this._min ? 'start' : 'end')
         .text(major)
-        .style('font-size', this._tickFontSize)
-        .style('fill', this._majorTicks.textColor)
-        .style('stroke-width', '0px')
     }
   }
 }
 
-proto._drawLine = function (p1, p2, color, width) {
+proto._drawLine = function (p1, p2, clazz) {
   this._gauge
     .append('svg:line')
-    .attr('x1'            ,  p1.x)
-    .attr('y1'            ,  p1.y)
-    .attr('x2'            ,  p2.x)
-    .attr('y2'            ,  p2.y)
-    .style('stroke'       ,  color)
-    .style('stroke-width' ,  width)
+    .attr('class' ,  clazz)
+    .attr('x1'    ,  p1.x)
+    .attr('y1'    ,  p1.y)
+    .attr('x2'    ,  p2.x)
+    .attr('y2'    ,  p2.y)
 }
 
 proto._drawZones = function () {
   var self = this;
   function drawZone (zone) {
-    if (self[zone]) self._drawBand(self[zone].from, self[zone].to, self[zone].color);
+    if (self[zone]) self._drawBand(self[zone].from, self[zone].to, self[zone].clazz);
   }
 
   this._zones.forEach(drawZone);
 }
 
-proto._drawBand = function (start, end, color) {
+proto._drawBand = function (start, end, clazz) {
   var self = this;
 
   function transform () {
@@ -189,7 +187,7 @@ proto._drawBand = function (start, end, color) {
 
   this._gauge
     .append('svg:path')
-    .style('fill', color)
+    .attr('class', clazz)
     .attr('d', arc)
     .attr('transform', transform)
 }
@@ -198,7 +196,7 @@ proto._drawNeedle = function () {
 
   var needleContainer = this._gauge
     .append('svg:g')
-    .attr('class', 'needleContainer');
+    .attr('class', 'needle-container');
 		
   var midValue = (this._min + this._max) / 2;
   
@@ -214,20 +212,17 @@ proto._drawNeedle = function () {
     .data([ needlePath ])
     .enter()
       .append('svg:path')
-        .attr('d'             ,  needleLine)
-        .style('fill'         ,  this._needle.fill)
-        .style('stroke'       ,  this._needle.stroke)
-        .style('fill-opacity' ,  this._needle.opacity)
+        .attr('class' ,  'needle')
+        .attr('d'     ,  needleLine)
         
   needleContainer
     .append('svg:circle')
     .attr('cx'            ,  this._cx)
     .attr('cy'            ,  this._cy)
     .attr('r'             ,  this._radius * this._needleContainer.radiusRatio / 10)
-      .style('fill'         ,  this._needleContainer.fill)
-      .style('stroke'       ,  this._needleContainer.stroke)
-      .style('fill-opacity' ,  this._needleContainer.opacity)
 
+  // TODO: not styling font-size since we need to calculate other values from it
+  //       how do I extract style value?
   var fontSize = Math.round(this._size / 10);
   needleContainer
     .selectAll('text')
@@ -238,9 +233,8 @@ proto._drawNeedle = function () {
         .attr('y'             ,  this._size - this._cy / 4 - fontSize)
         .attr('dy'            ,  fontSize / 2)
         .attr('text-anchor'   ,  'middle')
-        .style('font-size'    ,  fontSize + 'px')
-        .style('fill'         ,  '#000')
-        .style('stroke-width' ,  '0px');
+
+    window.con = needleContainer;
 }
 
 proto._buildNeedlePath = function (value) {
@@ -289,7 +283,7 @@ proto.redraw = function(value, transitionDuration) {
     }
   }
 
-  var needleContainer = this._gauge.select('.needleContainer');
+  var needleContainer = this._gauge.select('.needle-container');
   
   needleContainer
     .selectAll('text')
