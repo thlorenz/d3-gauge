@@ -7,21 +7,12 @@ var go = module.exports = {
   , max  :  100 
   , transitionDuration : 500
 
-  , label : {
-        text: 'label.text'
-    }
-  , minorTicks : { 
-        count: 4
-    }
-  , majorTicks : { 
-        count: 5
-    }
-  , needle : {
-        widthRatio : 0.6 
-    }
-  , needleContainer : {
-        radiusRatio :  0.7
-    }
+  , label                      :  'label.text'
+  , minorTicks                 :  4
+  , majorTicks                 :  5
+  , needleWidthRatio           :  0.6
+  , needleContainerRadiusRatio :  0.7
+
   , greenZone : undefined
   , yellowZone : {
         from  :  0.73

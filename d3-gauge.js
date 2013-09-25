@@ -26,17 +26,15 @@ function Gauge (el, opts) {
   this._max    =  this._opts.max;
   this._range  =  this._max - this._min;
 
-  this._outer  =  this._opts.outer;
-  this._inner  =  this._opts.inner;
-
   this._majorTicks = this._opts.majorTicks;
   this._minorTicks = this._opts.minorTicks;
-  this._tickFontSize = this._opts.tickFontSize || Math.round(this._size / 16)
 
-  this._needle = this._opts.needle;
-  this._needleContainer = this._opts.needleContainer;
+  this._needleWidthRatio = this._opts.needleWidthRatio;
+  this._needleContainerRadiusRatio = this._opts.needleContainerRadiusRatio;
   
   this._transitionDuration = this._opts.transitionDuration;
+  this._label = this._opts.label;
+  // TODO: zones should just be an array with from, to, clazz
   this._zones = [ '_greenZone', '_yellowZone', '_redZone' ];
   this._zoneSelectors = {
       greenZone  :  'green-zone'
@@ -109,10 +107,9 @@ proto._drawInnerCircle = function () {
 }
 
 proto._drawLabel = function () {
-  var labelOpts = this._opts.label;
-  if (typeof labelOpts === undefined) return;
+  if (typeof this._label === undefined) return;
 
-  var fontSize = labelOpts.fontSize || Math.round(this._size / 9);
+  var fontSize = Math.round(this._size / 9);
   var halfFontSize = fontSize / 2;
 
   this._gauge
@@ -122,12 +119,12 @@ proto._drawLabel = function () {
     .attr('y', this._cy / 2 + halfFontSize)
     .attr('dy', halfFontSize)
     .attr('text-anchor', 'middle')
-    .text(labelOpts.text)
+    .text(this._label)
 }
 
 proto._drawTicks = function () {
-  var majorDelta = this._range / (this._majorTicks.count - 1)
-    , minorDelta = majorDelta / this._minorTicks.count
+  var majorDelta = this._range / (this._majorTicks - 1)
+    , minorDelta = majorDelta / this._minorTicks
     , point 
     ;
 
@@ -219,7 +216,7 @@ proto._drawNeedle = function () {
     .append('svg:circle')
     .attr('cx'            ,  this._cx)
     .attr('cy'            ,  this._cy)
-    .attr('r'             ,  this._radius * this._needleContainer.radiusRatio / 10)
+    .attr('r'             ,  this._radius * this._needleContainerRadiusRatio / 10)
 
   // TODO: not styling font-size since we need to calculate other values from it
   //       how do I extract style value?
@@ -247,7 +244,7 @@ proto._buildNeedlePath = function (value) {
     return point;
   }
 
-  var delta = this._range * this._needle.widthRatio / 10
+  var delta = this._range * this._needleWidthRatio / 10
     , tailValue = value - (this._range * (1/ (270/360)) / 2)
 
   var head = valueToPoint(value, 0.85)
