@@ -31,37 +31,111 @@
         <hr>
 
         <section id="main_content">
-          <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+          <h1>
+<a name="d3-gauge" class="anchor" href="#d3-gauge"><span class="octicon octicon-link"></span></a>d3-gauge</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Gauge visualization built on top of d3.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p><a href=""><img src="https://github.com/thlorenz/d3-gauge/raw/master/assets/gauge-demo.gif" alt="demo"></a></p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">d3gauge</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'d3-gauge'</span><span class="p">);</span>
+
+<span class="c1">// </span>
+<span class="kd">var</span> <span class="nx">gauge</span> <span class="o">=</span> <span class="nx">d3gauge</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'simple-gauge'</span><span class="p">));</span>
+<span class="nx">gauge</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="mi">39</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Note:</strong> please make sure to <a href="#styling">include the appropriate <code>css</code></a> in your page, otherwise all you'll see is a big black
+circle.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>npm install d3-gauge
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<h2>
+<a name="try-it" class="anchor" href="#try-it"><span class="octicon octicon-link"></span></a>Try it</h2>
+
+<div class="highlight highlight-sh"><pre>npm explore d3-gauge
+npm run demo
+</pre></div>
+
+<h2>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
+
+<h4>
+<a name="gauge-el-opts" class="anchor" href="#gauge-el-opts"><span class="octicon octicon-link"></span></a>gauge (el[, opts])*</h4>
+
+<p>Creates a gauge appended to the given DOM element.</p>
+
+<p><a href="https://github.com/name" class="user-mention">@name</a> Gauge
+<a href="https://github.com/function" class="user-mention">@function</a>
+<strong>params:</strong></p>
+
+<ul>
+<li>el <em>DOMElement</em> to which the gauge is appended</li>
+<li>opts <em>Object</em> gauge configuration with the following properties all of which have sensible defaults:
+
+<ul>
+<li>label {String} that appears in the top portion of the gauge</li>
+<li>clazz {String} class to apply to the gauge element in order to support custom styling</li>
+<li>size {Number} the over all size (radius) of the gauge</li>
+<li>min {Number} the minimum value that the gauge measures</li>
+<li>max {Number} the maximum value that the gauge measures</li>
+<li>majorTicks {Number} the number of major ticks to draw</li>
+<li>minorTicks {Number} the number of minor ticks to draw in between two major ticks</li>
+<li>needleWidthRatio {Number} tweaks the gauge's needle width</li>
+<li>needleConatinerRadiusRatio {Number} tweaks the gauge's needle container circumference</li>
+<li>transitionDuration {Number} the time in ms it takes for the needle to move to a new position</li>
+<li>zones {Array[Object]} each with the following properties
+
+<ul>
+<li>clazz {String} class to apply to the zone element in order to style its fill</li>
+<li>from {Number} between 0 and 1 to determine zone's start</li>
+<li>to {Number} between 0 and 1 to determine zone's end</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p><strong>returns:</strong></p>
+
+<p><em>Object</em> the gauge with a <code>write</code> method</p>
+
+<p><strong>Note:</strong> have a look at the <a href="https://github.com/thlorenz/d3-gauge/blob/master/defaults/simple.js">default opts</a></p>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="gaugewrite--functionvalue-transitionduration" class="anchor" href="#gaugewrite--functionvalue-transitionduration"><span class="octicon octicon-link"></span></a><em>gauge.write = function(value, transitionDuration)</em>
+</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>Writes a value to the gauge and updates its state, i.e. needle position, accordingly.
+<a href="https://github.com/name" class="user-mention">@name</a> write
+<a href="https://github.com/function" class="user-mention">@function</a>
+<strong>params:</strong></p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<ul>
+<li>value <em>Number</em> the new gauge value, should be in between min and max</li>
+<li>transitionDuration <em>Number</em> (optional) transition duration, if not supplied the configured duration is used</li>
+</ul><h2>
+<a name="styling" class="anchor" href="#styling"><span class="octicon octicon-link"></span></a>Styling</h2>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<p>d3-gauge can be custom styled and none of the features are visible if no style is included at all.</p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<p>Please have a look <a href="https://github.com/thlorenz/d3-gauge/tree/master/defaults">at the styles included here</a> in order to
+get an idea of what parts you can tweak to your liking.</p>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h2>
+<a name="kudos" class="anchor" href="#kudos"><span class="octicon octicon-link"></span></a>Kudos</h2>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>This implementation was highly inspired by <a href="http://bl.ocks.org/tomerd/1499279">this post</a>.</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>Although lots of work went into cleaning the code up and making the gauge configurable and stylable, the main idea came
+from there.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT</p>
         </section>
 
         <footer>
