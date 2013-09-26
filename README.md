@@ -10,7 +10,7 @@ var gauge = d3gauge(document.getElementById('simple-gauge'));
 gauge.write(39);
 ```
 
-**Note:** please make sure to [include the appropriate `css`]() in your page, otherwise all you'll see is a big black
+**Note:** please make sure to [include the appropriate `css`](#styling) in your page, otherwise all you'll see is a big black
 circle.
 
 ## Installation
@@ -40,9 +40,9 @@ Creates a gauge appended to the given DOM element.
   - needleConatinerRadiusRatio {Number} tweaks the gauge's needle container circumference
   - transitionDuration {Number} the time in ms it takes for the needle to move to a new position
   - zones {Array[Object]} each with the following properties
-    - clazz {String} class to apply to the zone element in order to style its fill
-    - from {Number} between 0 and 1 to determine zone's start
-    - to {Number} between 0 and 1 to determine zone's end
+      - clazz {String} class to apply to the zone element in order to style its fill
+      - from {Number} between 0 and 1 to determine zone's start
+      - to {Number} between 0 and 1 to determine zone's end
 
 **returns:**
 
