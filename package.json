@@ -1,6 +1,6 @@
 {
   "name": "d3-gauge",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Gauge visualization built on top of d3.",
   "main": "d3-gauge",
   "scripts": {
@@ -16,9 +16,6 @@
     "xtend": "~2.1.1"
   },
   "devDependencies": {
-    "nave": "~0.4.3",
-    "tape": "~1.0.4",
-    "tap": "~0.4.3",
     "beefy": "~0.4.3"
   },
   "keywords": [],
