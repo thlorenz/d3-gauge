@@ -140,11 +140,15 @@ proto._initZones = function () {
   }
 
   function initZone (zone) {
-    zone.from = percentToVal(zone.from);
-    zone.to = percentToVal(zone.to);  
+    return { 
+        clazz: zone.clazz
+      , from: percentToVal(zone.from)
+      , to:  percentToVal(zone.to)
+    }
   }
 
-  this._zones.forEach(initZone);
+  // create new zones to not mess with the passed in args
+  this._zones = this._zones.map(initZone);
 }
 
 proto._render = function () {
