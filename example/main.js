@@ -5,10 +5,11 @@ var gauge = require('../')
   , small = require('../defaults/small')
   , gauges = [];
 
+var gaugesContainer = document.getElementById('gauges');
 function createGauge (opts) {
   var el = document.createElement('div');
   el.setAttribute('class', 'gauge-container');
-  document.body.appendChild(el);
+  gaugesContainer.appendChild(el);
   var g = gauge(el, opts);
   g.currentValue = g._range / 2;
   gauges.push(g);
