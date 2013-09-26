@@ -2,7 +2,7 @@
 
 // heavily inspired by: http://bl.ocks.org/tomerd/1499279
 
-var deepXtend = require('deep-extend');
+var xtend = require('xtend');
 var defaultOpts = require('./defaults/simple');
 var d3 = require('d3');
 
@@ -14,7 +14,7 @@ function Gauge (el, opts) {
 
   this._el = el;
 
-  this._opts = deepXtend(defaultOpts, opts);  
+  this._opts = xtend(defaultOpts, opts);  
 
   this._size   =  this._opts.size;
   this._radius =  this._size * 0.9 / 2;
@@ -38,6 +38,7 @@ function Gauge (el, opts) {
   this._zones = this._opts.zones || [];
 
   this._clazz = opts.clazz;
+
   this._initZones();
   this._render();
 }

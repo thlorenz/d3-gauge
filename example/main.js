@@ -1,7 +1,7 @@
 'use strict';
 
 var gauge = require('../')
-  , deepXtend = require('deep-extend')
+  , xtend = require('xtend')
   , small = require('../defaults/small')
   , simple = require('../defaults/simple')
   , gauges = [];
@@ -26,8 +26,7 @@ function updateGauges() {
   });
 }
 
-// TODO: fix deep extend - currently messes with original
 createGauge({ clazz: 'simple', label:  'Main Mem' });
-createGauge(deepXtend(small, { clazz: 'small', label: 'Proc Mem' }));
+createGauge(xtend(small, { clazz: 'small', label: 'Proc Mem' }));
 
 setInterval(updateGauges, 500);
