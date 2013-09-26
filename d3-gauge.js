@@ -34,13 +34,8 @@ function Gauge (el, opts) {
   
   this._transitionDuration = this._opts.transitionDuration;
   this._label = this._opts.label;
-  // TODO: zones should just be an array with from, to, clazz
-  this._zones = [ '_greenZone', '_yellowZone', '_redZone' ];
-  this._zoneSelectors = {
-      greenZone  :  'green-zone'
-    , yellowZone :  'yellow-zone'
-    , redZone    :  'red-zone'
-  }
+
+  this._zones = this._opts.zones || [];
 
   this._clazz = opts.clazz;
   this._initZones();
@@ -55,13 +50,8 @@ proto._initZones = function () {
   }
 
   function initZone (zone) {
-    self[zone] = self._opts[zone.slice(1)];
-
-    if (self[zone]) { 
-      self[zone].from = percentToVal(self[zone].from);
-      self[zone].to = percentToVal(self[zone].to);  
-      self[zone].clazz = self._zoneSelectors[zone.slice(1)];
-    }
+    zone.from = percentToVal(zone.from);
+    zone.to = percentToVal(zone.to);  
   }
 
   this._zones.forEach(initZone);
@@ -162,7 +152,7 @@ proto._drawLine = function (p1, p2, clazz) {
 proto._drawZones = function () {
   var self = this;
   function drawZone (zone) {
-    if (self[zone]) self._drawBand(self[zone].from, self[zone].to, self[zone].clazz);
+    self._drawBand(zone.from, zone.to, zone.clazz);
   }
 
   this._zones.forEach(drawZone);

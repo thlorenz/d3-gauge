@@ -13,13 +13,8 @@ var go = module.exports = {
   , needleWidthRatio           :  0.6
   , needleContainerRadiusRatio :  0.7
 
-  , greenZone : undefined
-  , yellowZone : {
-        from  :  0.73
-      , to    :  0.9
-    }
-  , redZone : {
-        from  :  0.9
-      , to    :  1.0 
-    }
+  , zones: [
+      { clazz: 'yellow-zone', from: 0.73, to: 0.9 }
+    , { clazz: 'red-zone', from: 0.9, to: 1.0 }
+    ]
 };
