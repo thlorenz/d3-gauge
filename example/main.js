@@ -3,7 +3,6 @@
 var gauge = require('../')
   , xtend = require('xtend')
   , small = require('../defaults/small')
-  , simple = require('../defaults/simple')
   , gauges = [];
 
 function createGauge (opts) {
@@ -17,12 +16,14 @@ function createGauge (opts) {
 
 function getRandomNextValue(gauge) {
   gauge.currentValue += (Math.random() - 0.5) * gauge._range / 10; 
+  if (gauge.currentValue < gauge._min) gauge.currentValue = gauge._min;
+  if (gauge.currentValue > gauge._max) gauge.currentValue = gauge._max;
   return gauge.currentValue;
 }
 
 function updateGauges() {
   gauges.forEach(function (gauge) {
-    gauge.redraw(getRandomNextValue(gauge));
+    gauge.write(getRandomNextValue(gauge));
   });
 }
 

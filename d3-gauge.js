@@ -9,6 +9,53 @@ var d3 = require('d3');
 var go = module.exports = Gauge;
 var proto = Gauge.prototype;
 
+/**
+ * Creates a gauge appended to the given DOM element.
+ *
+ * Example: 
+ *
+ * ```js
+ *  var simpleOpts = {
+ *      size :  100
+ *    , min  :  0
+ *    , max  :  50 
+ *    , transitionDuration : 500
+ *
+ *    , label                      :  'label.text'
+ *    , minorTicks                 :  4
+ *    , majorTicks                 :  5
+ *    , needleWidthRatio           :  0.6
+ *    , needleContainerRadiusRatio :  0.7
+ *
+ *    , zones: [
+ *        { clazz: 'yellow-zone', from: 0.73, to: 0.9 }
+ *      , { clazz: 'red-zone', from: 0.9, to: 1.0 }
+ *      ]
+ *  }
+ *  var gauge = Gauge(document.getElementById('simple-gauge'), simpleOpts);
+ *  gauge.write(39);
+ * ```
+ * 
+ * @name Gauge
+ * @function
+ * @param el {DOMElement} to which the gauge is appended
+ * @param opts {Object} gauge configuration with the following properties all of which have sensible defaults:
+ *  - label {String} that appears in the top portion of the gauge
+ *  - clazz {String} class to apply to the gauge element in order to support custom styling
+ *  - size {Number} the over all size (radius) of the gauge
+ *  - min {Number} the minimum value that the gauge measures
+ *  - max {Number} the maximum value that the gauge measures
+ *  - majorTicks {Number} the number of major ticks to draw 
+ *  - minorTicks {Number} the number of minor ticks to draw in between two major ticks
+ *  - needleWidthRatio {Number} tweaks the gauge's needle width
+ *  - needleConatinerRadiusRatio {Number} tweaks the gauge's needle container circumference
+ *  - transitionDuration {Number} the time in ms it takes for the needle to move to a new position
+ *  - zones {Array[Object]} each with the following properties
+ *    - clazz {String} class to apply to the zone element in order to style its fill
+ *    - from {Number} between 0 and 1 to determine zone's start 
+ *    - to {Number} between 0 and 1 to determine zone's end 
+ * @return {Object} the gauge with a `write` method
+ */
 function Gauge (el, opts) {
   if (!(this instanceof Gauge)) return new Gauge(el, opts);
 
@@ -43,6 +90,48 @@ function Gauge (el, opts) {
   this._render();
 }
 
+/**
+ * Writes a value to the gauge and updates its state, i.e. needle position, accordingly.
+ * @name write
+ * @function
+ * @param value {Number} the new gauge value, should be in between min and max
+ * @param transitionDuration {Number} (optional) transition duration, if not supplied the configured duration is used
+ */
+proto.write = function(value, transitionDuration) {
+  var self = this;
+
+  function transition () {
+    var needleValue = value
+      , overflow = value > self._max
+      , underflow = value < self._min;
+
+         if (overflow)  needleValue = self._max + 0.02 * self._range;
+    else if (underflow) needleValue = self._min - 0.02 * self._range;
+
+    var targetRotation = self._toDegrees(needleValue) - 90
+      , currentRotation = self._currentRotation || targetRotation;
+
+    self._currentRotation = targetRotation;
+    
+    return function (step) {
+      var rotation = currentRotation + (targetRotation - currentRotation) * step;
+      return 'translate(' + self._cx + ', ' + self._cy + ') rotate(' + rotation + ')'; 
+    }
+  }
+
+  var needleContainer = this._gauge.select('.needle-container');
+  
+  needleContainer
+    .selectAll('text')
+    .text(Math.round(value));
+  
+  var needle = needleContainer.selectAll('path');
+  needle
+    .transition()
+    .duration(transitionDuration ? transitionDuration : this._transitionDuration)
+    .attrTween('transform', transition);
+}
+
 proto._initZones = function () {
   var self = this;
 
@@ -68,7 +157,7 @@ proto._render = function () {
   this._drawTicks();
 
   this._drawNeedle();
-  this.redraw(this._min, 0);
+  this.write(this._min, 0);
 }
 
 proto._initGauge = function () {
@@ -247,41 +336,6 @@ proto._buildNeedlePath = function (value) {
     , tail2 = valueToPoint(tailValue + delta, 0.12)
   
   return [head, head1, tail2, tail, tail1, head2, head];
-}
-
-proto.redraw = function(value, transitionDuration) {
-  var self = this;
-
-  function transition () {
-    var needleValue = value
-      , overflow = value > self._max
-      , underflow = value < self._min;
-
-         if (overflow)  needleValue = self._max + 0.02 * self._range;
-    else if (underflow) needleValue = self._min - 0.02 * self._range;
-
-    var targetRotation = self._toDegrees(needleValue) - 90
-      , currentRotation = self._currentRotation || targetRotation;
-
-    self._currentRotation = targetRotation;
-    
-    return function (step) {
-      var rotation = currentRotation + (targetRotation - currentRotation) * step;
-      return 'translate(' + self._cx + ', ' + self._cy + ') rotate(' + rotation + ')'; 
-    }
-  }
-
-  var needleContainer = this._gauge.select('.needle-container');
-  
-  needleContainer
-    .selectAll('text')
-    .text(Math.round(value));
-  
-  var needle = needleContainer.selectAll('path');
-  needle
-    .transition()
-    .duration(transitionDuration ? transitionDuration : this._transitionDuration)
-    .attrTween('transform', transition);
 }
 
 proto._toDegrees = function (value) {
