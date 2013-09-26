@@ -315,8 +315,6 @@ proto._drawNeedle = function () {
         .attr('y'             ,  this._size - this._cy / 4 - fontSize)
         .attr('dy'            ,  fontSize / 2)
         .attr('text-anchor'   ,  'middle')
-
-    window.con = needleContainer;
 }
 
 proto._buildNeedlePath = function (value) {
