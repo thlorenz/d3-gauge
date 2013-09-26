@@ -2,6 +2,8 @@
 
 Gauge visualization built on top of d3.
 
+[![demo](https://github.com/thlorenz/d3-gauge/raw/master/assets/gauge-demo.gif)]()
+
 ```js
 var d3gauge = require('d3-gauge');
 
