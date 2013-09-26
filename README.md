@@ -2,12 +2,11 @@
 
 Gauge visualization built on top of d3.
 
-[![demo](https://github.com/thlorenz/d3-gauge/raw/master/assets/gauge-demo.gif)]()
+[![demo](https://github.com/thlorenz/d3-gauge/raw/master/assets/gauge-demo.gif)](http://thlorenz.github.io/d3-gauge/index.html)
 
 ```js
 var d3gauge = require('d3-gauge');
 
-// 
 var gauge = d3gauge(document.getElementById('simple-gauge'));
 gauge.write(39);
 ```
