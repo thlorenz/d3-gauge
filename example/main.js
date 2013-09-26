@@ -29,5 +29,6 @@ function updateGauges() {
 
 createGauge({ clazz: 'simple', label:  'Main Mem' });
 createGauge(xtend(small, { clazz: 'small', label: 'Proc Mem' }));
+createGauge({ clazz: 'grayscale', label:  'Pressure' });
 
 setInterval(updateGauges, 500);
