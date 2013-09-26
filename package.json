@@ -4,7 +4,7 @@
   "description": "Gauge visualization built on top of d3.",
   "main": "d3-gauge",
   "scripts": {
-    "demo": "echo 'Open: http://0.0.0.0:3000' && beefy example/main.js 3000"
+    "demo": "echo 'Open: http://0.0.0.0:3000' && (cd example && beefy main.js 3000)"
   },
   "repository": {
     "type": "git",

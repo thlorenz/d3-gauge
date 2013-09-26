@@ -18,6 +18,12 @@ circle.
 ## Installation
 
     npm install d3-gauge
+## Try it
+
+```sh
+npm explore d3-gauge
+npm run demo
+```
 
 ## API
 
