@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>D3-gauge by thlorenz</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>D3-gauge</h1>
+          <h2>Gauge visualization built on top of d3.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/thlorenz/d3-gauge/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/thlorenz/d3-gauge/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/thlorenz/d3-gauge" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="d3-gauge" class="anchor" href="#d3-gauge"><span class="octicon octicon-link"></span></a>d3-gauge</h1>
+
+<p>Gauge visualization built on top of d3.</p>
+
+<p><a href=""><img src="https://github.com/thlorenz/d3-gauge/raw/master/assets/gauge-demo.gif" alt="demo"></a></p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">d3gauge</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'d3-gauge'</span><span class="p">);</span>
+
+<span class="c1">// </span>
+<span class="kd">var</span> <span class="nx">gauge</span> <span class="o">=</span> <span class="nx">d3gauge</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">'simple-gauge'</span><span class="p">));</span>
+<span class="nx">gauge</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="mi">39</span><span class="p">);</span>
+</pre></div>
+
+<p><strong>Note:</strong> please make sure to <a href="#styling">include the appropriate <code>css</code></a> in your page, otherwise all you'll see is a big black
+circle.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>npm install d3-gauge
+</code></pre>
+
+<h2>
+<a name="try-it" class="anchor" href="#try-it"><span class="octicon octicon-link"></span></a>Try it</h2>
+
+<div class="highlight highlight-sh"><pre>npm explore d3-gauge
+npm run demo
+</pre></div>
+
+<h2>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
+
+<h4>
+<a name="gauge-el-opts" class="anchor" href="#gauge-el-opts"><span class="octicon octicon-link"></span></a>gauge (el[, opts])*</h4>
+
+<p>Creates a gauge appended to the given DOM element.</p>
+
+<p><a href="https://github.com/name" class="user-mention">@name</a> Gauge
+<a href="https://github.com/function" class="user-mention">@function</a>
+<strong>params:</strong></p>
+
+<ul>
+<li>el <em>DOMElement</em> to which the gauge is appended</li>
+<li>opts <em>Object</em> gauge configuration with the following properties all of which have sensible defaults:
+
+<ul>
+<li>label {String} that appears in the top portion of the gauge</li>
+<li>clazz {String} class to apply to the gauge element in order to support custom styling</li>
+<li>size {Number} the over all size (radius) of the gauge</li>
+<li>min {Number} the minimum value that the gauge measures</li>
+<li>max {Number} the maximum value that the gauge measures</li>
+<li>majorTicks {Number} the number of major ticks to draw</li>
+<li>minorTicks {Number} the number of minor ticks to draw in between two major ticks</li>
+<li>needleWidthRatio {Number} tweaks the gauge's needle width</li>
+<li>needleConatinerRadiusRatio {Number} tweaks the gauge's needle container circumference</li>
+<li>transitionDuration {Number} the time in ms it takes for the needle to move to a new position</li>
+<li>zones {Array[Object]} each with the following properties
+
+<ul>
+<li>clazz {String} class to apply to the zone element in order to style its fill</li>
+<li>from {Number} between 0 and 1 to determine zone's start</li>
+<li>to {Number} between 0 and 1 to determine zone's end</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p><strong>returns:</strong></p>
+
+<p><em>Object</em> the gauge with a <code>write</code> method</p>
+
+<p><strong>Note:</strong> have a look at the <a href="https://github.com/thlorenz/d3-gauge/blob/master/defaults/simple.js">default opts</a></p>
+
+<h3>
+<a name="gaugewrite--functionvalue-transitionduration" class="anchor" href="#gaugewrite--functionvalue-transitionduration"><span class="octicon octicon-link"></span></a><em>gauge.write = function(value, transitionDuration)</em>
+</h3>
+
+<p>Writes a value to the gauge and updates its state, i.e. needle position, accordingly.
+<a href="https://github.com/name" class="user-mention">@name</a> write
+<a href="https://github.com/function" class="user-mention">@function</a>
+<strong>params:</strong></p>
+
+<ul>
+<li>value <em>Number</em> the new gauge value, should be in between min and max</li>
+<li>transitionDuration <em>Number</em> (optional) transition duration, if not supplied the configured duration is used</li>
+</ul><h2>
+<a name="styling" class="anchor" href="#styling"><span class="octicon octicon-link"></span></a>Styling</h2>
+
+<p>d3-gauge can be custom styled and none of the features are visible if no style is included at all.</p>
+
+<p>Please have a look <a href="https://github.com/thlorenz/d3-gauge/tree/master/defaults">at the styles included here</a> in order to
+get an idea of what parts you can tweak to your liking.</p>
+
+<h2>
+<a name="kudos" class="anchor" href="#kudos"><span class="octicon octicon-link"></span></a>Kudos</h2>
+
+<p>This implementation was highly inspired by <a href="http://bl.ocks.org/tomerd/1499279">this post</a>.</p>
+
+<p>Although lots of work went into cleaning the code up and making the gauge configurable and stylable, the main idea came
+from there.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>MIT</p>
+        </section>
+
+        <footer>
+          D3-gauge is maintained by <a href="https://github.com/thlorenz">thlorenz</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+                  <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-32151587-6");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+      </div>
+    </div>
+  </body>
+</html>
