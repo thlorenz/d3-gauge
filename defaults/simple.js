@@ -1,8 +1,7 @@
 'use strict';
 
 var go = module.exports = {
-    clazz: 'simple'
-  , size :  250
+    size :  250
   , min  :  0
   , max  :  100 
   , transitionDuration : 500
