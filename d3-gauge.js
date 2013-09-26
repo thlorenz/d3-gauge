@@ -123,6 +123,7 @@ proto.write = function(value, transitionDuration) {
   
   needleContainer
     .selectAll('text')
+    .attr('class', 'current-value')
     .text(Math.round(value));
   
   var needle = needleContainer.selectAll('path');
