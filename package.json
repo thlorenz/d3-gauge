@@ -18,7 +18,7 @@
   "devDependencies": {
     "beefy": "~0.4.3"
   },
-  "keywords": [],
+  "keywords": [ "d3", "gauge", "svg", "visualize", "visualization" ],
   "author": {
     "name": "Thorsten Lorenz",
     "email": "thlorenz@gmx.de",
