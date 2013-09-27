@@ -1,6 +1,6 @@
 {
   "name": "d3-gauge",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Gauge visualization built on top of d3.",
   "main": "d3-gauge",
   "scripts": {
@@ -18,7 +18,13 @@
   "devDependencies": {
     "beefy": "~0.4.3"
   },
-  "keywords": [ "d3", "gauge", "svg", "visualize", "visualization" ],
+  "keywords": [
+    "d3",
+    "gauge",
+    "svg",
+    "visualize",
+    "visualization"
+  ],
   "author": {
     "name": "Thorsten Lorenz",
     "email": "thlorenz@gmx.de",
