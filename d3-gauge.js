@@ -43,6 +43,7 @@ var proto = Gauge.prototype;
  *  - label {String} that appears in the top portion of the gauge
  *  - clazz {String} class to apply to the gauge element in order to support custom styling
  *  - size {Number} the over all size (radius) of the gauge
+ *  - preserveAspectRatio {String} default 'xMinYMin meet', see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
  *  - min {Number} the minimum value that the gauge measures
  *  - max {Number} the maximum value that the gauge measures
  *  - majorTicks {Number} the number of major ticks to draw 
@@ -68,6 +69,8 @@ function Gauge (el, opts) {
 
   this._cx     =  this._size / 2;
   this._cy     =  this._cx;
+
+  this._preserveAspectRatio = this._opts.preserveAspectRatio;
 
   this._min    =  this._opts.min;
   this._max    =  this._opts.max;
@@ -171,6 +174,8 @@ proto._initGauge = function () {
     .attr('class'  ,  'd3-gauge' + (this._clazz ? ' ' + this._clazz : ''))
     .attr('width'  ,  this._size)
     .attr('height' ,  this._size)
+    .attr('viewBox',  '0 0 ' + this._size + ' ' + this._size)
+    .attr('preserveAspectRatio', this._preserveAspectRatio || 'xMinYMin meet')
 }
 
 proto._drawOuterCircle = function () {
