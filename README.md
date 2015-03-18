@@ -39,6 +39,7 @@ Creates a gauge appended to the given DOM element.
   - label {String} that appears in the top portion of the gauge
   - clazz {String} class to apply to the gauge element in order to support custom styling
   - size {Number} the over all size (radius) of the gauge
+  - preserveAspectRatio {String} default 'xMinYMin meet', see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
   - min {Number} the minimum value that the gauge measures
   - max {Number} the maximum value that the gauge measures
   - majorTicks {Number} the number of major ticks to draw
