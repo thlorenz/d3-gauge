@@ -1,6 +1,6 @@
 {
   "name": "d3-gauge",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Gauge visualization built on top of d3.",
   "main": "d3-gauge",
   "scripts": {
