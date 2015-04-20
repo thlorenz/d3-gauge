@@ -85,7 +85,3 @@ from there.
 ## License
 
 MIT
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/thlorenz/d3-gauge/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
