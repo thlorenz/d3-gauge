@@ -68,6 +68,17 @@ Writes a value to the gauge and updates its state, i.e. needle position, accordi
 - value *Number* the new gauge value, should be in between min and max
 - transitionDuration *Number* (optional) transition duration, if not supplied the configured duration is used
 
+###*gauge.refreshRange = function(maxValue, minValue)*
+
+Refreshes the zones and the ticks without removing and rendering the whole gauge.
+This method is meant to be used when your max/min data could change dynamically.
+@name refreshRange
+@function
+**params:**
+
+- maxValue *Number* (optional) Max. If not passed it'll use value from _opts.max
+- minValue *Number* (optional) Min.
+
 ## Styling
 
 d3-gauge can be custom styled and none of the features are visible if no style is included at all.

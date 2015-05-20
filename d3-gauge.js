@@ -135,6 +135,27 @@ proto.write = function(value, transitionDuration) {
     .duration(transitionDuration ? transitionDuration : this._transitionDuration)
     .attrTween('transform', transition);
 }
+/**
+ * Refreshes the zones and the ticks without removing and rendering the whole gauge.
+ * This method is meant to be used when your max/min data could change dynamically.
+ * @name refreshRange
+ * @param maxValue {Number} (optional) Max. Optional only if you would like to go back to _opts.max
+ * @param minValue {Number} (optional) Min.
+ */
+proto.refreshRange = function(maxValue, minValue) {
+	this._min = minValue ? minValue : this._opts.min;
+	this._max = maxValue ? maxValue : this._opts.max;
+	this._range = this._max - this._min;
+	
+	this._initZones();
+	this._drawZones();
+	
+	this._gauge.select('.major-tick-label[text-anchor="start"]').remove();
+	this._gauge.select('.major-tick-label[text-anchor="end"]').remove();
+	this._drawTicks();
+	
+	return this;
+};
 
 proto._initZones = function () {
   var self = this;
@@ -152,7 +173,7 @@ proto._initZones = function () {
   }
 
   // create new zones to not mess with the passed in args
-  this._zones = this._zones.map(initZone);
+  this._zones = this._opts.zones.map(initZone);
 }
 
 proto._render = function () {
